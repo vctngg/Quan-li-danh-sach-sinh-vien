@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 using namespace std;
 
 struct SVBK{
@@ -47,16 +48,17 @@ void DSSV_Swap(DSSV* ds, string name1, string name2){//doi cho 2 phan tu trong d
         if (sv1->ho_ten == name1){
             while (sv2 != 0){
                 if (sv2->ho_ten == name2){
-                    DSSV_Replace(svm,sv1);
-                    DSSV_Replace(sv1,sv2);
-                    DSSV_Replace(sv2,svm);
+                    DSSV_Replace(svm,sv1);             
+                    DSSV_Replace(sv1,sv2);                
+                    DSSV_Replace(sv2,svm); 
+                    delete svm;
+                    return;
                 }
                 sv2 = sv2->next;
             }
         }
         sv1 = sv1->next;
     }
-    delete svm;
 }
 int DSSV_Length(DSSV* ds){//tinh so luong sinh vien
     SVBK* sv = ds->firstSV;
@@ -76,7 +78,7 @@ void DSSV_Display(DSSV* ds){//duyet danh sach sinh vien
         while (sv != 0){
             cout << "\nHo va ten: " << sv->ho_ten;
             cout << "\nMSSV: " << sv->mssv;
-            cout << "\nNam sinh " << sv->nam_sinh;
+            cout << "\nNam sinh: " << sv->nam_sinh;
             cout << "\nGPA: " << sv->gpa;
             cout << "\n";
             sv = sv->next;
@@ -104,14 +106,22 @@ int DSSV_GPA32(DSSV* ds){//tinh so sinh vien tren 3.2 GPA trong danh sach
 }
 void DSSV_SapXepGPA(DSSV* ds){//sap xep danh sach theo thu tu gpa tang dan
     int n = DSSV_Length(ds);
+    //cout << "No.";
+    //cout << setw(10) << "min\n";
     for (int i=0;i<n-1;i++){
       int min_index = i;
+      //cout << i+1;
       for (int j=i+1;j<n;j++){
-         if (DSSV_GetSVfromIndex(ds,j)<DSSV_GetSVfromIndex(ds,min_index)){
+         if (DSSV_GetSVfromIndex(ds,j)->gpa<DSSV_GetSVfromIndex(ds,min_index)->gpa){
             min_index = j;
          }
       }
+      //cout << setw(10) << DSSV_GetSVfromIndex(ds,min_index)->gpa;
       DSSV_Swap(ds,DSSV_GetSVfromIndex(ds,i)->ho_ten,DSSV_GetSVfromIndex(ds,min_index)->ho_ten);
+      for (int k=0;k<n;k++){
+        //cout << setw(10) << DSSV_GetSVfromIndex(ds,k)->gpa;
+      }
+      //cout << "\n";
    }
 }
 void DSSV_AddSapXepGPA(DSSV* ds, string ho_ten, long mssv, int nam_sinh, float gpa){
@@ -139,9 +149,9 @@ int main(){
 
     DSSV danh_sach;
     DSSV_Init(&danh_sach);
-    DSSV_Add(&danh_sach, "Nguyen Tu Quang", 202413944, 1975, 4);
-    DSSV_Add(&danh_sach, "Ba To Com", 202813123, 1945, 2);
-    DSSV_Add(&danh_sach, "Benjamin Tennyson", 202413944, 1954, 3);
+    DSSV_Add(&danh_sach, "Nguyen Tu Quang", 202413944, 1975, 4.0);
+    DSSV_Add(&danh_sach, "Ba To Com", 202813123, 1945, 2.0);
+    DSSV_Add(&danh_sach, "Benjamin Tennyson", 202413944, 1954, 3.0);
     DSSV_Add(&danh_sach, "Tokuda Shigeo", 206713579, 2019, 1.2);
     DSSV_Add(&danh_sach, "Michael Teeheeson", 200101109, 1960, 3.6);
     DSSV_Add(&danh_sach, "Phung Thanh Do", 0700212, 1989, 2.5);
